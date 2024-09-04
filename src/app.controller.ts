@@ -4,6 +4,7 @@ import {
   EventPattern,
   MessagePattern,
   RpcException,
+  Transport,
 } from '@nestjs/microservices';
 import { createUserEvent } from './create-user.event';
 
@@ -16,7 +17,7 @@ export class AppController {
     return this.appService.getHello();
   }
 
-  @EventPattern('user_created')
+  @EventPattern('user_created', Transport.TCP)
   handleUserCreated(data: createUserEvent) {
     this.appService.handleUserCreated(data);
   }

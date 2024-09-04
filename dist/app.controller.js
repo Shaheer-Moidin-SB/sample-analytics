@@ -51,7 +51,7 @@ __decorate([
     __metadata("design:returntype", String)
 ], AppController.prototype, "getHello", null);
 __decorate([
-    (0, microservices_1.EventPattern)('user_created'),
+    (0, microservices_1.EventPattern)('user_created', microservices_1.Transport.TCP),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [create_user_event_1.createUserEvent]),
     __metadata("design:returntype", void 0)
