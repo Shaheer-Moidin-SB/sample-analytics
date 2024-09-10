@@ -1,6 +1,8 @@
 import {
   Controller,
   Get,
+  HttpException,
+  HttpStatus,
   Inject,
   OnModuleInit,
   UseGuards,
@@ -51,7 +53,7 @@ export class AppController implements OnModuleInit {
     try {
       return await this.appService.NotifyAnalytics();
     } catch (oError) {
-      console.log(oError);
+      throw new HttpException(oError, HttpStatus.UNAUTHORIZED);
     }
   }
 
