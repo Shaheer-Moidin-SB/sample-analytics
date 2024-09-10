@@ -11,6 +11,19 @@ import { ClientsModule, Transport } from '@nestjs/microservices';
         transport: Transport.TCP,
         options: { port: 3001 },
       },
+      {
+        name: 'AUTH_SERVICE',
+        transport: Transport.KAFKA,
+        options: {
+          client: {
+            clientId: 'auth',
+            brokers: ['localhost:9092'],
+          },
+          consumer: {
+            groupId: 'auth-consumer',
+          },
+        },
+      },
     ]),
   ],
   controllers: [AppController],

@@ -1,16 +1,27 @@
-import { Controller, Get } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Inject,
+  OnModuleInit,
+  UseGuards,
+} from '@nestjs/common';
 import { AppService } from './app.service';
 import {
   EventPattern,
   MessagePattern,
   RpcException,
   Transport,
+  ClientKafka,
 } from '@nestjs/microservices';
 import { createUserEvent } from './create-user.event';
-
+import { AuthGuard } from './guards/auth.guard';
+import { AuthFlag } from './decorators/auth-flag.decorator';
 @Controller()
-export class AppController {
-  constructor(private readonly appService: AppService) {}
+export class AppController implements OnModuleInit {
+  constructor(
+    private readonly appService: AppService,
+    @Inject('AUTH_SERVICE') private readonly authClient: ClientKafka,
+  ) {}
 
   @Get()
   getHello(): string {
@@ -34,11 +45,17 @@ export class AppController {
   }
 
   @Get('notify-subscriber')
+  @UseGuards(AuthGuard)
+  @AuthFlag('privateRoute')
   async NotifyAnalytics() {
     try {
       return await this.appService.NotifyAnalytics();
     } catch (oError) {
       console.log(oError);
     }
+  }
+
+  onModuleInit() {
+    this.authClient.subscribeToResponseOf('authorize_user');
   }
 }
